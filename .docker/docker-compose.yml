@@ -24,7 +24,7 @@ services:
       - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.rule=Host(`traefik.jcalise.fr`)"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-
+      - "traefik.http.routers.traefik.service=api@internal"
 
   database:
     container_name: database
