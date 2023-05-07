@@ -4,3 +4,7 @@
 
   [entryPoints.websecure]
     address = ":443"
+
+  [api]
+    dashboard = true
+    insecure = true
