@@ -5,26 +5,13 @@ services:
   traefik:
     image: "traefik"
     container_name: "traefik"
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
     ports:
       - "80:80"
       - "443:443"
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik.toml:/traefik.toml"
-      - "./acme.json:/acme.json"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=web"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.jcalise.fr`)"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-      - "traefik.http.routers.traefik.service=api@internal"
+      - "./traefik/traefik.toml:/traefik.toml"
 
   database:
     container_name: database
@@ -44,22 +31,35 @@ services:
     container_name: phpmyadmin
     image: "phpmyadmin"
     restart: always
-    ports:
-      - '8080:80'
+    depends_on:
+      - "traefik"
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=database
     links:
       - database
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.jcalise.fr`)"
+      - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
+      - "traefik.http.routers.phpmyadmin.tls=true"
+      - "traefik.http.routers.phpmyadmin.tls.certresolver=sample"
 
   php:
     container_name: php
     build:
-      context: ./php
+      context: "./php"
+      dockerfile: "Dockerfile"
     environment:
       PHP_EXTENSION_INTL: 1
     volumes:
-      - ../app:/var/www/html:rw
+      - "../app:/var/www/html:rw"
     depends_on:
       - database
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.php.rule=Host(`php.jcalise.fr`)"
+      - "traefik.http.routers.php.entrypoints=websecure"
+      - "traefik.http.routers.php.tls=true"
+      - "traefik.http.routers.php.tls.certresolver=sample"
