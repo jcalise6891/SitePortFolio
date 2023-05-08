@@ -1,4 +1,4 @@
-FROM thecodingmachine/php:8.1-v4-apache-node16
+FROM thecodingmachine/php:8.2-v4-apache-node18
 
 RUN sudo apt update && \
      sudo apt install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip
