@@ -1,0 +1,24 @@
+[entryPoints]
+[entryPoints.web]
+address = ":80"
+
+[entryPoints.websecure]
+address = ":443"
+
+[api]
+dashboard = true
+insecure = true
+
+[providers.docker]
+exposedByDefault = false
+
+[certificatesResolvers.sample.acme]
+email = "julien.calise@orange.fr"
+storage = "acme.json"
+[certificatesResolvers.sample.acme.httpChallenge]
+entryPoint = "web"
+
+# Redirection automatique du trafic HTTP vers HTTPS
+[entryPoints.web.http.redirections.entryPoint]
+to = "websecure"
+scheme = "https"
