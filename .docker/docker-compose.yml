@@ -12,6 +12,9 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/traefik.toml:/traefik.toml"
+    networks:
+      - "frontend"
+      - "backend"
 
   database:
     container_name: "database"
@@ -26,6 +29,8 @@ services:
       - '4306:3306'
     volumes:
       - "../mysql:/var/lib/mysql"
+    networks:
+      - "backend"
 
   phpmyadmin:
     container_name: "phpmyadmin"
@@ -44,6 +49,8 @@ services:
       - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
       - "traefik.http.routers.phpmyadmin.tls=true"
       - "traefik.http.routers.phpmyadmin.tls.certresolver=sample"
+    networks:
+      - "backend"
 
   php:
     container_name: "php"
@@ -64,3 +71,24 @@ services:
       - "traefik.http.routers.php.entrypoints=websecure"
       - "traefik.http.routers.php.tls=true"
       - "traefik.http.routers.php.tls.certresolver=sample"
+    networks:
+      - "backend"
+      - "frontend"
+
+  composer:
+    container_name: "composer"
+    image: "composer"
+    command: "install"
+    restart: "no"
+    working_dir: "/app"
+    volumes:
+      - "../app:/app"
+    networks:
+      - "backend"
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
