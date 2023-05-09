@@ -52,8 +52,9 @@ services:
       dockerfile: "Dockerfile"
     environment:
       PHP_EXTENSION_INTL: "1"
+      APACHE_DOCUMENT_ROOT: "/var/www/html/app/public"
     volumes:
-      - "../app:/var/www/html:rw"
+      - "../app:/var/www/html/app:rw"
     depends_on:
       - "database"
     restart: "always"
