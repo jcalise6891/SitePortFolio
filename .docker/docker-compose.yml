@@ -1,0 +1,94 @@
+version: '3.9'
+
+services:
+
+  traefik:
+    image: "traefik"
+    container_name: "traefik"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/traefik.toml:/traefik.toml"
+    networks:
+      - "frontend"
+      - "backend"
+
+  database:
+    container_name: "database"
+    image: "mysql:8.0"
+    command: "--default-authentication-plugin=mysql_native_password"
+    environment:
+      MYSQL_ROOT_PASSWORD: "secret"
+      MYSQL_DATABASE: "symfony_docker"
+      MYSQL_USER: "symfony"
+      MYSQL_PASSWORD: "symfony"
+    ports:
+      - '4306:3306'
+    volumes:
+      - "../mysql:/var/lib/mysql"
+    networks:
+      - "backend"
+
+  phpmyadmin:
+    container_name: "phpmyadmin"
+    image: "phpmyadmin"
+    restart: "always"
+    depends_on:
+      - "traefik"
+    environment:
+      - "PMA_ARBITRARY=1"
+      - "PMA_HOST=database"
+    links:
+      - "database"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.jcalise.fr`)"
+      - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
+      - "traefik.http.routers.phpmyadmin.tls=true"
+      - "traefik.http.routers.phpmyadmin.tls.certresolver=sample"
+    networks:
+      - "backend"
+
+  php:
+    container_name: "php"
+    build:
+      context: "./php"
+      dockerfile: "Dockerfile"
+    environment:
+      PHP_EXTENSION_INTL: "1"
+      APACHE_DOCUMENT_ROOT: "/var/www/html/app/public"
+    volumes:
+      - "../app:/var/www/html/app:rw"
+    depends_on:
+      - "database"
+    restart: "always"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.php.rule=Host(`php.jcalise.fr`)"
+      - "traefik.http.routers.php.entrypoints=websecure"
+      - "traefik.http.routers.php.tls=true"
+      - "traefik.http.routers.php.tls.certresolver=sample"
+    networks:
+      - "backend"
+      - "frontend"
+
+  composer:
+    container_name: "composer"
+    image: "composer"
+    command: "install"
+    restart: "no"
+    working_dir: "/app"
+    volumes:
+      - "../app:/app"
+    networks:
+      - "backend"
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
