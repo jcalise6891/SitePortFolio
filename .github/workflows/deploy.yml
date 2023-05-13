@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           script: |
             cd ~/SitePortFolio/
-            git pull
+            git pull -v
             cd ~/SitePortFolio/.docker/
             docker-compose down
             docker-compose up -d
