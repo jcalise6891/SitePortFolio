@@ -17,9 +17,6 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           script: |
-            if [ ! -d "/home/github/SitePortFolio" ]; then
-              git clone git@github.com:jcalise6891/SitePortFolio.git ~/
-            fi
             cd ~/SitePortFolio/
             git pull
             cd ~/SitePortFolio/.docker/
