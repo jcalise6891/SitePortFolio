@@ -13,8 +13,9 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: deploy
-          key: ${{ secrets.DEPLOY_KEY }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
           script: |
             if [ ! -d "/path/to/your/project" ]; then
               git clone git@github.com:jcalise6891/SitePortFolio.git ~/
