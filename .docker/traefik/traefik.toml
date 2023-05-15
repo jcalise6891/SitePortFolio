@@ -11,15 +11,16 @@ insecure = true
 
 [providers.docker]
 exposedByDefault = false
-watch=true
+[providers.file]
+directory = "/providers/"
+watch = true
 
 [certificatesResolvers]
-[certificatesResolvers.default]
-[certificatesResolvers.default.acme]
+[certificatesResolvers.le-resolver]
+[certificatesResolvers.le-resolver.acme]
 email = "julien.calise@orange.fr"
 storage = "acme.json"
-caServer = "https://acme-v02.api.letsencrypt.org/directory"
-[certificatesResolvers.default.acme.tlsChallenge]
+[certificatesResolvers.le-resolver.acme.tlsChallenge]
 
 # Redirection automatique du trafic HTTP vers HTTPS
 [entryPoints.web.http.redirections.entryPoint]

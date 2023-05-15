@@ -12,6 +12,8 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/traefik.toml:/traefik.toml"
+      - "./traefik/providers:/providers"
+      - "./traefik/acme.json:/acme.json"
     networks:
       - "frontend"
       - "backend"
@@ -48,7 +50,6 @@ services:
       - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.jcalise.fr`)"
       - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
       - "traefik.http.routers.phpmyadmin.tls=true"
-      - "traefik.http.routers.phpmyadmin.tls.certresolver=sample"
     networks:
       - "backend"
 
@@ -68,9 +69,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.php.rule=Host(`www.jcalise.fr`)"
+#      - "traefik.http.routers.php.rule=Host(`php.jcalise.fr`)"
       - "traefik.http.routers.php.entrypoints=websecure"
       - "traefik.http.routers.php.tls=true"
-      - "traefik.http.routers.php.tls.certresolver=sample"
+      - "traefik.http.routers.php.tls.certresolver=le-resolver"
     networks:
       - "backend"
       - "frontend"
