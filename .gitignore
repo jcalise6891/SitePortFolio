@@ -3,3 +3,5 @@
 .idea/
 mysql
 .docker/traefik/acme.json
+.docker/.env
+

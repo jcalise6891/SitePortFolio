@@ -68,8 +68,7 @@ services:
     restart: "always"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.php.rule=Host(`www.jcalise.fr`, `jcalise.fr`)"
- #     - "traefik.http.routers.php.rule=Host(`php.jcalise.fr`)"
+      - "traefik.http.routers.php.rule=Host(`${PHP_HOST}`)"
       - "traefik.http.routers.php.entrypoints=websecure"
       - "traefik.http.routers.php.tls=true"
       - "traefik.http.routers.php.tls.certresolver=le-resolver"
