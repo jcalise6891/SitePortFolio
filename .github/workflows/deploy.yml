@@ -30,6 +30,5 @@ jobs:
             cd ~/SitePortFolio/.docker/
             docker-compose down
             docker-compose up -d
-            cd ~/SitePortFolio/app/
-            npm install
-            npm run build
+            cd ~/SitePortfolio/app/
+            docker exec -it php /bin/bash -c "cd /var/www/html/app && npm install && npm run build"
