@@ -19,12 +19,12 @@ jobs:
 
       - name: Install npm dependencies
         run : |  
-          cd ~/SitePortFolio/app
+          cd /home/github/SitePortFolio/app/
           npm install
 
       - name: Build
         run: |
-          cd ~/SitePortFolio/app
+          cd /home/github/SitePortFolio/app/
           npm run build
 
       - name: Deploy to Server
