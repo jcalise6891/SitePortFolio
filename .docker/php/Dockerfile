@@ -10,6 +10,8 @@ RUN sudo apt update && \
 
 WORKDIR /var/www/html
 
+RUN sudo chown -R docker:docker /var/www/html
+
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash
 RUN sudo apt install symfony-cli
 RUN git config --global user.email "julien.calise@orange.fr" \
