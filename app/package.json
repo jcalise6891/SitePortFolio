@@ -30,7 +30,7 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
-        "test": "jest --watch"
+        "test": "jest"
     },
     "dependencies": {
         "@headlessui/react": "^1.7.14",
