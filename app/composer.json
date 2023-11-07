@@ -94,8 +94,10 @@
         }
     },
     "require-dev": {
+        "phpstan/phpstan": "*",
         "phpunit/phpunit": "^9.6",
         "roave/security-advisories": "dev-latest",
+        "squizlabs/php_codesniffer": "*",
         "symfony/browser-kit": "6.2.*",
         "symfony/css-selector": "6.2.*",
         "symfony/debug-bundle": "6.2.*",

@@ -1,0 +1,54 @@
+name: TestSuite
+on:
+  pull_request:
+    branches:
+      - master
+
+defaults:
+  run:
+    working-directory: ./app
+
+jobs:
+
+  coding-standards:
+    name: Coding Standards
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Setup PHP with extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql
+
+      - uses: actions/checkout@v4
+      - name: Install Composer
+        run: |
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php -r "if (hash_file('sha384', 'composer-setup.php') === '$(wget -qO - https://composer.github.io/installer.sig)') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          php -r "unlink('composer-setup.php');"  
+
+      - uses: actions/setup-node@v3
+      - name: Install NPM dependencies
+        with:
+          node-version: 18
+        run: npm ci
+
+      - name: Install Package
+        run: composer install
+
+      - name: Check coding standards
+        run: ./vendor/bin/phpcs --standard=PSR12 src/
+
+      - name: Fix coding format
+        run: ./vendor/bin/phpcbf src/
+
+      - name: Check code conformity
+        run: ./vendor/bin/phpstan analyze src/
+
+      - name: Check react component
+        run: npm test ./tests/
+
+      - name: Check Unit test
+        run : ./vendor/bin/phpunit
