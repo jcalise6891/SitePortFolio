@@ -6,3 +6,4 @@ mysql
 .docker/.env
 /vendor/
 /conception/
+/app.7z
